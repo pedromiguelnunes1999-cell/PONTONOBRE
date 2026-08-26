@@ -53,9 +53,12 @@ img {
 }
 
 /* ===== PHOTO HARMONY ===== */
-.about__image img,
-.events-masonry__item img {
+.about__image img {
     filter: brightness(0.97) contrast(1.04) saturate(0.94);
+}
+
+.events-masonry__item img {
+    image-rendering: auto;
 }
 
 .events__image img.img--events {
@@ -799,9 +802,9 @@ a {
 
 .gallery .events-masonry {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.75rem;
-    align-items: start;
+    align-items: stretch;
 }
 
 .events-masonry__item {
@@ -810,14 +813,17 @@ a {
     margin: 0;
     padding: 0;
     border: 1px solid var(--color-border);
-    background: transparent;
+    background: var(--color-white);
     box-shadow: var(--shadow-sm);
     cursor: pointer;
     appearance: none;
     font: inherit;
     text-align: inherit;
     width: 100%;
-    display: block;
+    aspect-ratio: 3 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     line-height: 0;
     transition: box-shadow var(--transition-fast);
 }
@@ -828,9 +834,10 @@ a {
 
 .events-masonry__item img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
-    vertical-align: top;
+    object-fit: cover;
+    object-position: center;
 }
 
 .events-masonry__item--hidden {
@@ -838,7 +845,7 @@ a {
 }
 
 .events-masonry.is-expanded .events-masonry__item--hidden {
-    display: block;
+    display: flex;
 }
 
 .gallery__actions {
@@ -1377,7 +1384,7 @@ a.contact__item--link:focus-visible {
     }
 
     .gallery .events-masonry {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .quote__grid {
@@ -1489,7 +1496,7 @@ a.contact__item--link:focus-visible {
     }
 
     .gallery .events-masonry {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.75rem;
     }
 

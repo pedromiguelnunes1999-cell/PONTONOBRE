@@ -3,8 +3,8 @@ $mainSource = 'c:\Users\pedro\OneDrive\Desktop\Nova pasta (2)'
 $extraSource = 'c:\Users\pedro\OneDrive\Desktop\PN IMAGENS'
 $dest = Join-Path $PSScriptRoot 'images\gallery'
 $ffmpeg = Join-Path $PSScriptRoot 'tools\ffmpeg\ffmpeg.exe'
-$maxWidth = 1600
-$quality = 82
+$maxWidth = 2800
+$quality = 95
 
 if (-not (Test-Path $dest)) {
     New-Item -ItemType Directory -Path $dest -Force | Out-Null
@@ -83,7 +83,7 @@ function Convert-HeicToJpeg($inputPath, $outputPath, $maxW, $jpegQuality) {
 
     $tempFile = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [Guid]::NewGuid().ToString('N') + '.jpg')
     try {
-        $null = & $ffmpeg -y -hide_banner -loglevel error -i $inputPath -frames:v 1 -update 1 -q:v 5 $tempFile 2>&1
+        $null = & $ffmpeg -y -hide_banner -loglevel error -i $inputPath -frames:v 1 -update 1 -q:v 2 $tempFile 2>&1
         if (-not (Test-Path $tempFile)) {
             throw 'ffmpeg nao gerou ficheiro de saida'
         }
