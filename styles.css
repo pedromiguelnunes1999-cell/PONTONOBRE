@@ -21,6 +21,13 @@
     --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --transition-fast: 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    --color-error: #B33A2B;
+    --color-error-soft: rgba(179, 58, 43, 0.07);
+    --color-success: #4E7A51;
+
     --header-height: 92px;
     --container-width: 1200px;
 }
@@ -345,6 +352,8 @@ a {
 }
 
 .nav__cta {
+    position: relative;
+    overflow: hidden;
     flex-shrink: 0;
     padding: 12px 24px;
     font-size: 0.7rem;
@@ -367,11 +376,17 @@ a {
 .nav__close {
     display: none;
     cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
 }
 
 .nav__toggle {
     flex-direction: column;
     gap: 5px;
+    width: 24px;
 }
 
 .nav__toggle span {
@@ -489,23 +504,27 @@ a {
     50% { transform: translateY(12px); opacity: 0.3; }
 }
 
-/* ===== REVEAL ANIMATIONS ===== */
-.reveal {
+/* ===== REVEAL ANIMATIONS =====
+   Prefixadas com .js para que o conteúdo continue visível caso o
+   JavaScript falhe ou seja bloqueado (degradação graciosa). */
+.js .reveal {
     opacity: 0;
     transform: translateY(40px);
-    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: opacity 0.9s var(--ease-out-expo),
+                transform 0.9s var(--ease-out-expo);
+    will-change: opacity, transform;
 }
 
-.reveal.visible {
+.js .reveal.visible {
     opacity: 1;
     transform: translateY(0);
+    will-change: auto;
 }
 
 /* Evita desfoque em fotografias durante animação reveal */
-.events__image.reveal,
-.about__image.reveal,
-.events-masonry__item.reveal {
+.js .events__image.reveal,
+.js .about__image.reveal,
+.js .events-masonry__item.reveal {
     transform: none;
 }
 
@@ -838,6 +857,12 @@ a {
     display: block;
     object-fit: cover;
     object-position: center;
+    transition: transform 1s var(--ease-out-expo);
+}
+
+.events-masonry__item:hover img,
+.events-masonry__item:focus-visible img {
+    transform: scale(1.06);
 }
 
 .events-masonry__item--hidden {
@@ -1349,6 +1374,479 @@ a.contact__item--link:focus-visible {
     flex-shrink: 0;
 }
 
+/* =============================================================
+   MICROINTERAÇÕES E TRANSIÇÕES
+   ============================================================= */
+
+/* ----- Brilho subtil nos botões ----- */
+.btn::after,
+.nav__cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        115deg,
+        transparent 25%,
+        rgba(255, 255, 255, 0.26) 50%,
+        transparent 75%
+    );
+    transform: translateX(-130%);
+    transition: transform 0.9s var(--ease-out-expo);
+    pointer-events: none;
+}
+
+.btn:hover::after,
+.btn:focus-visible::after,
+.nav__cta:hover::after,
+.nav__cta:focus-visible::after {
+    transform: translateX(130%);
+}
+
+.btn:active,
+.nav__cta:active {
+    transform: translateY(0) scale(0.985);
+}
+
+/* ----- Foco visível coerente em toda a interface ----- */
+.btn:focus-visible,
+.nav__cta:focus-visible,
+.nav__link:focus-visible,
+.footer__nav a:focus-visible,
+.events-masonry__item:focus-visible,
+.to-top:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+}
+
+/* ----- Cabeçalho que se retrai ao descer ----- */
+.header {
+    will-change: transform;
+}
+
+.header.is-hidden {
+    transform: translateY(-100%);
+}
+
+/* ----- Imagens com aparecimento suave ----- */
+.js img[data-fade='pending'] {
+    opacity: 0;
+}
+
+.js img[data-fade='loaded'] {
+    opacity: 1;
+    transition: opacity 0.9s var(--ease-out-soft);
+}
+
+/* ----- Realce da galeria ----- */
+.events-masonry__item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(28, 28, 28, 0) 45%, rgba(28, 28, 28, 0.42) 100%);
+    opacity: 0;
+    transition: opacity var(--transition);
+    pointer-events: none;
+}
+
+.events-masonry__item:hover::after,
+.events-masonry__item:focus-visible::after {
+    opacity: 1;
+}
+
+/* ----- Cartões de evento ----- */
+.event__card,
+.value__card,
+.process__number {
+    will-change: transform;
+}
+
+/* ----- Sobreposição do menu mobile ----- */
+.nav__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 990;
+    background: rgba(28, 28, 28, 0.45);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.nav__overlay[hidden] {
+    display: none;
+}
+
+.nav__overlay.is-visible {
+    opacity: 1;
+}
+
+.nav__toggle span {
+    transform-origin: center;
+}
+
+.nav__toggle.is-active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav__toggle.is-active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.nav__toggle.is-active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ----- Lightbox com entrada suave ----- */
+.lightbox {
+    opacity: 0;
+    transition: opacity 0.35s var(--ease-out-soft);
+}
+
+.lightbox.is-open {
+    opacity: 1;
+}
+
+.lightbox__figure {
+    transform: scale(0.965);
+    opacity: 0;
+    transition: transform 0.5s var(--ease-out-expo), opacity 0.4s var(--ease-out-soft);
+}
+
+.lightbox.is-open .lightbox__figure {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* ----- Voltar ao topo com anel de progresso ----- */
+.to-top {
+    position: fixed;
+    right: 30px;
+    bottom: 104px;
+    z-index: 9000;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-dark);
+    color: var(--color-white);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(14px) scale(0.9);
+    transition: opacity var(--transition), transform var(--transition),
+                visibility var(--transition), background var(--transition-fast);
+}
+
+.to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.to-top:hover {
+    background: var(--color-gold-dark);
+}
+
+.to-top__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    fill: none;
+    pointer-events: none;
+}
+
+.to-top__track {
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 2;
+}
+
+.to-top__indicator {
+    stroke: var(--color-gold-light);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 138.23;
+    stroke-dashoffset: 138.23;
+    transition: stroke-dashoffset 0.15s linear;
+}
+
+.to-top__icon {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    transition: transform var(--transition-fast);
+}
+
+.to-top:hover .to-top__icon {
+    transform: translateY(-2px);
+}
+
+/* =============================================================
+   FORMULÁRIO — ESTADOS E VALIDAÇÃO
+   ============================================================= */
+
+.form__status {
+    margin-bottom: 1rem;
+}
+
+.form__progress {
+    height: 3px;
+    background: var(--color-border);
+    overflow: hidden;
+}
+
+.form__progress-bar {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-gold-light), var(--color-gold));
+    transition: width 0.6s var(--ease-out-expo);
+}
+
+.form__progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.45rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    color: var(--color-text-light);
+}
+
+.form__progress-value {
+    font-weight: 600;
+    color: var(--color-gold-dark);
+}
+
+.form__note {
+    font-size: 0.72rem;
+    color: var(--color-text-light);
+    margin-bottom: 1.1rem;
+}
+
+.form__required {
+    color: var(--color-gold-dark);
+    margin-left: 3px;
+    font-weight: 600;
+}
+
+.form__summary {
+    border-left: 3px solid var(--color-error);
+    background: var(--color-error-soft);
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.1rem;
+    animation: summaryIn 0.45s var(--ease-out-expo) both;
+}
+
+.form__summary[hidden] {
+    display: none;
+}
+
+.form__summary-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.form__summary-head svg {
+    width: 18px;
+    height: 18px;
+    color: var(--color-error);
+    flex-shrink: 0;
+}
+
+.form__summary-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-error);
+    line-height: 1.4;
+}
+
+.form__summary-list {
+    list-style: none;
+    margin: 0.55rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+}
+
+.form__summary-link {
+    border: 1px solid rgba(179, 58, 43, 0.35);
+    background: transparent;
+    color: var(--color-error);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.form__summary-link:hover,
+.form__summary-link:focus-visible {
+    background: var(--color-error);
+    color: var(--color-white);
+    outline: none;
+}
+
+@keyframes summaryIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ----- Mensagem de erro por campo ----- */
+.form__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: var(--color-error);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-4px);
+    transition: max-height 0.35s var(--ease-out-expo),
+                opacity 0.25s var(--ease-out-soft),
+                transform 0.35s var(--ease-out-expo);
+}
+
+.form__error::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7v6'/%3E%3Cpath d='M12 16h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7v6'/%3E%3Cpath d='M12 16h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.has-error .form__error {
+    max-height: 5rem;
+    opacity: 1;
+    transform: none;
+}
+
+/* ----- Estado inválido ----- */
+.has-error .form__input {
+    border-color: var(--color-error);
+    background: var(--color-error-soft);
+}
+
+.has-error .form__input:focus {
+    box-shadow: 0 0 0 3px rgba(179, 58, 43, 0.14);
+}
+
+.has-error .form__label,
+.has-error .form__legend {
+    color: var(--color-error);
+}
+
+.has-error .form__hint {
+    display: none;
+}
+
+/* ----- Estado válido ----- */
+.is-valid .form__input {
+    border-color: rgba(78, 122, 81, 0.45);
+}
+
+/* O ícone é omitido nos controlos com UI nativa própria
+   (data e número) para não colidir com os respetivos botões. */
+.is-valid > .form__input:not(.form__select):not(.form__textarea):not([type='date']):not([type='number']) {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234E7A51' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 38px;
+}
+
+/* ----- Campos condicionais ----- */
+.form__conditional.is-visible {
+    animation: fieldIn 0.45s var(--ease-out-expo) both;
+}
+
+@keyframes fieldIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ----- Destaque temporário do campo focado por erro ----- */
+.form__group.is-highlighted,
+.form__fieldset.is-highlighted {
+    animation: fieldShake 0.5s var(--ease-out-soft);
+}
+
+@keyframes fieldShake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-5px); }
+    45%      { transform: translateX(4px); }
+    70%      { transform: translateX(-2px); }
+}
+
+.form__counter {
+    text-align: right;
+}
+
+.form__counter.is-near-limit {
+    color: var(--color-gold-dark);
+    font-weight: 500;
+}
+
+/* ----- Botão de envio em estado de carregamento ----- */
+.form__submit.is-loading {
+    pointer-events: none;
+}
+
+.form__submit .form__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    border-top-color: var(--color-white);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* =============================================================
+   TOAST — VARIANTES
+   ============================================================= */
+.toast {
+    max-width: min(420px, calc(100vw - 40px));
+    line-height: 1.5;
+    font-size: 0.88rem;
+}
+
+.toast__icon {
+    display: none;
+}
+
+.toast--success .toast__icon--success,
+.toast--error .toast__icon--error,
+.toast--info .toast__icon--info {
+    display: block;
+}
+
+.toast--error {
+    background: #3B2320;
+}
+
+.toast--error .toast__icon--error {
+    color: #E5907E;
+}
+
+.toast--info .toast__icon--info {
+    color: var(--color-gold-light);
+}
+
 /* ===== RESPONSIVE ===== */
 @media screen and (max-width: 1024px) {
     .events__grid {
@@ -1531,14 +2029,70 @@ a.contact__item--link:focus-visible {
     }
 }
 
+@media screen and (max-width: 768px) {
+    /* Entrada escalonada dos itens do menu mobile */
+    .nav__list li {
+        opacity: 0;
+        transform: translateX(24px);
+        transition: opacity 0.45s var(--ease-out-soft),
+                    transform 0.45s var(--ease-out-expo);
+    }
+
+    .nav__menu.show-menu .nav__list li {
+        opacity: 1;
+        transform: none;
+    }
+
+    .nav__menu.show-menu .nav__list li:nth-child(1) { transition-delay: 0.08s; }
+    .nav__menu.show-menu .nav__list li:nth-child(2) { transition-delay: 0.14s; }
+    .nav__menu.show-menu .nav__list li:nth-child(3) { transition-delay: 0.20s; }
+    .nav__menu.show-menu .nav__list li:nth-child(4) { transition-delay: 0.26s; }
+    .nav__menu.show-menu .nav__list li:nth-child(5) { transition-delay: 0.32s; }
+
+    .nav__menu {
+        z-index: 995;
+    }
+
+    .to-top {
+        right: 20px;
+        bottom: 92px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .toast {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        max-width: none;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 
-    .reveal {
+    .js .reveal,
+    .js .reveal.visible {
         opacity: 1;
         transform: none;
+    }
+
+    .js img[data-fade='pending'] {
+        opacity: 1;
+    }
+
+    .nav__list li {
+        opacity: 1;
+        transform: none;
+    }
+
+    .btn::after,
+    .nav__cta::after {
+        display: none;
     }
 }

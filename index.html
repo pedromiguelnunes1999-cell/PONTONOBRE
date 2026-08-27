@@ -11,21 +11,22 @@
     <meta name="author" content="Ponto Nobre Eventos">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Portuguese">
-    <link rel="canonical" href="https://pontonobre.pt/">
+    <meta name="theme-color" content="#F5F2EC">
+    <link rel="canonical" href="https://pontonobreeventos.pt/">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pontonobre.pt/">
+    <meta property="og:url" content="https://pontonobreeventos.pt/">
     <meta property="og:title" content="Ponto Nobre Eventos — Catering de Churrasco Premium">
     <meta property="og:description" content="Criamos momentos que ficam para sempre. Carnes DOP, produtos nacionais e serviço de excelência.">
-    <meta property="og:image" content="https://pontonobre.pt/logo.png">
+    <meta property="og:image" content="https://pontonobreeventos.pt/logo.png">
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Ponto Nobre Eventos">
 
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://pontonobre.pt/">
+    <meta property="twitter:url" content="https://pontonobreeventos.pt/">
     <meta property="twitter:title" content="Ponto Nobre Eventos — Catering de Churrasco Premium">
     <meta property="twitter:description" content="Criamos momentos que ficam para sempre. Carnes DOP, produtos nacionais e serviço de excelência.">
-    <meta property="twitter:image" content="https://pontonobre.pt/logo.png">
+    <meta property="twitter:image" content="https://pontonobreeventos.pt/logo.png">
 
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="preload" as="image" href="images/hero-bg.jpg" fetchpriority="high">
@@ -39,17 +40,21 @@
       "@context": "https://schema.org",
       "@type": "FoodEstablishment",
       "name": "Ponto Nobre Eventos",
-      "image": "https://pontonobre.pt/logo.png",
+      "image": "https://pontonobreeventos.pt/logo.png",
       "description": "Catering de churrasco premium para eventos. Carnes DOP e produtos nacionais selecionados.",
-      "url": "https://pontonobre.pt",
+      "url": "https://pontonobreeventos.pt",
       "servesCuisine": "Portuguese",
       "priceRange": "$$$",
+      "email": "geral@pontonobreeventos.pt",
+      "sameAs": ["https://www.instagram.com/pontonobre.eventos/"],
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "PT"
       }
     }
     </script>
+
+    <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
@@ -73,15 +78,17 @@
                         <li><a href="#galeria" class="nav__link">Galeria</a></li>
                         <li><a href="#contactos" class="nav__link">Contactos</a></li>
                     </ul>
-                    <div class="nav__close" id="nav-close">&times;</div>
+                    <button type="button" class="nav__close" id="nav-close" aria-label="Fechar menu">&times;</button>
                 </div>
                 <a href="#orcamento" class="nav__cta">Pedir Orçamento</a>
-                <div class="nav__toggle" id="nav-toggle">
+                <button type="button" class="nav__toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-menu">
                     <span></span><span></span><span></span>
-                </div>
+                </button>
             </div>
         </nav>
     </header>
+
+    <div class="nav__overlay" id="nav-overlay" hidden></div>
 
     <!-- Hero -->
     <section class="hero" id="inicio">
@@ -337,6 +344,26 @@
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_template" value="table">
 
+                    <div class="form__status">
+                        <div class="form__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="form-progress-label">
+                            <span class="form__progress-bar" id="form-progress-bar"></span>
+                        </div>
+                        <p class="form__progress-label" id="form-progress-label">
+                            <span id="form-progress-text">Preencha os campos obrigatórios</span>
+                            <span class="form__progress-value" id="form-progress-value">0%</span>
+                        </p>
+                    </div>
+
+                    <div class="form__summary" id="form-summary" role="alert" hidden>
+                        <div class="form__summary-head">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                            <p class="form__summary-title" id="form-summary-title">Faltam campos por preencher</p>
+                        </div>
+                        <ul class="form__summary-list" id="form-summary-list"></ul>
+                    </div>
+
+                    <p class="form__note">Os campos marcados com <span class="form__required" aria-hidden="true">*</span> são de preenchimento obrigatório.</p>
+
                     <div class="form__body">
                         <div class="form__group form__group--full">
                             <label for="nome" class="form__label">Nome completo</label>
@@ -349,7 +376,7 @@
                         </div>
                         <div class="form__group">
                             <label for="telefone" class="form__label">Telefone</label>
-                            <input type="tel" id="telefone" name="telefone" class="form__input" required placeholder="+351 900 000 000" autocomplete="tel">
+                            <input type="tel" id="telefone" name="telefone" class="form__input" required placeholder="912 345 678" autocomplete="tel" inputmode="tel">
                         </div>
 
                         <fieldset class="form__fieldset form__fieldset--compact form__group--full">
@@ -410,11 +437,11 @@
                         </fieldset>
                         <div class="form__group">
                             <label for="cidade" class="form__label">Cidade</label>
-                            <input type="text" id="cidade" name="cidade" class="form__input" required placeholder="Ex: Lisboa">
+                            <input type="text" id="cidade" name="cidade" class="form__input" required placeholder="Ex: Lisboa" autocomplete="address-level2">
                         </div>
                         <div class="form__group">
                             <label for="regiao" class="form__label">Província / Região</label>
-                            <input type="text" id="regiao" name="regiao" class="form__input" required placeholder="Ex: Lisboa">
+                            <input type="text" id="regiao" name="regiao" class="form__input" required placeholder="Ex: Lisboa" autocomplete="address-level1">
                         </div>
                         <div class="form__group form__group--full">
                             <label for="espaco" class="form__label">Espaço do evento <span class="form__label-optional">(opcional)</span></label>
@@ -443,6 +470,7 @@
                         <div class="form__group">
                             <label for="restricoes" class="form__label">Restrições alimentares</label>
                             <input type="text" id="restricoes" name="restricoes" class="form__input" required placeholder="Ex: Nenhuma">
+                            <p class="form__hint">Se não existirem, escreva &laquo;Nenhuma&raquo;.</p>
                         </div>
                         <div class="form__group">
                             <label for="como-conheceu" class="form__label">Como nos conheceu?</label>
@@ -458,7 +486,8 @@
 
                         <div class="form__group form__group--full">
                             <label for="observacoes" class="form__label">Observações ou pedidos especiais <span class="form__label-optional">(opcional)</span></label>
-                            <textarea id="observacoes" name="observacoes" class="form__input form__textarea" rows="3" placeholder="Detalhes adicionais sobre o seu evento..."></textarea>
+                            <textarea id="observacoes" name="observacoes" class="form__input form__textarea" rows="3" maxlength="600" placeholder="Detalhes adicionais sobre o seu evento..." aria-describedby="observacoes-counter"></textarea>
+                            <p class="form__hint form__counter" id="observacoes-counter">0 / 600 caracteres</p>
                         </div>
                     </div>
 
@@ -526,9 +555,22 @@
         </div>
     </footer>
 
+    <!-- Voltar ao topo -->
+    <button type="button" class="to-top" id="to-top" aria-label="Voltar ao topo">
+        <svg class="to-top__ring" viewBox="0 0 48 48" aria-hidden="true">
+            <circle class="to-top__track" cx="24" cy="24" r="22"/>
+            <circle class="to-top__indicator" cx="24" cy="24" r="22"/>
+        </svg>
+        <svg class="to-top__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>
+
     <!-- Toast -->
-    <div class="toast" id="toast">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div class="toast toast--success" id="toast" role="status" aria-live="polite">
+        <svg class="toast__icon toast__icon--success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <svg class="toast__icon toast__icon--error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v6"/><path d="M12 16h.01"/></svg>
+        <svg class="toast__icon toast__icon--info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
         <span id="toast-message">Pedido enviado com sucesso!</span>
     </div>
 
