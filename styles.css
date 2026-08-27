@@ -417,7 +417,7 @@ a {
 .hero__bg {
     position: absolute;
     inset: 0;
-    background-image: url('images/hero-bg.jpg');
+    background-image: url('images/hero-bg.webp');
     background-position: center 48%;
     background-size: cover;
     background-repeat: no-repeat;
@@ -460,6 +460,18 @@ a {
     font-weight: 400;
     line-height: 1.15;
     margin-bottom: 1.5rem;
+}
+
+/* A frase-chave vive dentro do H1 por razões de SEO, mas mantém
+   o aspeto de etiqueta que tinha quando era um elemento à parte. */
+.hero__title .hero__label {
+    display: block;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+}
+
+.hero__title-text {
+    display: block;
 }
 
 .hero__subtitle {
@@ -1515,6 +1527,16 @@ a.contact__item--link:focus-visible {
 .lightbox.is-open .lightbox__figure {
     transform: scale(1);
     opacity: 1;
+}
+
+/* Enquanto a alta resolução carrega, a miniatura é apresentada com um
+   ligeiro desfoque que desaparece quando a imagem definitiva chega. */
+.lightbox__image {
+    transition: filter 0.5s var(--ease-out-soft);
+}
+
+.lightbox__image.is-loading {
+    filter: blur(8px);
 }
 
 /* ----- Voltar ao topo com anel de progresso ----- */

@@ -323,10 +323,15 @@
             return;
         }
 
+        // A grelha usa miniaturas leves; o lightbox carrega a versão de alta
+        // resolução apenas quando a fotografia é ampliada.
         const photos = $$('[data-gallery-index]', gallery).map(item => {
             const image = $('img', item);
+            const thumb = image?.getAttribute('src') || '';
+
             return {
-                src: image?.getAttribute('src') || '',
+                thumb,
+                src: image?.dataset.full || thumb,
                 alt: image?.getAttribute('alt') || 'Fotografia de evento Ponto Nobre'
             };
         });
@@ -357,10 +362,32 @@
                 return;
             }
 
-            lightboxImage.src = photo.src;
             lightboxImage.alt = photo.alt;
             lightboxCaption.textContent = photo.alt;
             lightboxCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+
+            if (photo.src === photo.thumb) {
+                lightboxImage.src = photo.src;
+                return;
+            }
+
+            // Carregamento progressivo: a miniatura (já em cache) aparece de
+            // imediato e é substituída pela alta resolução quando esta chegar.
+            lightboxImage.src = photo.thumb;
+            lightboxImage.classList.add('is-loading');
+
+            const requested = currentIndex;
+            const highResolution = new Image();
+
+            highResolution.onload = () => {
+                if (requested === currentIndex) {
+                    lightboxImage.src = highResolution.src;
+                    lightboxImage.classList.remove('is-loading');
+                }
+            };
+
+            highResolution.onerror = () => lightboxImage.classList.remove('is-loading');
+            highResolution.src = photo.src;
         }
 
         function open(index) {

@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ponto Nobre Eventos — Catering de Churrasco Premium</title>
-    <meta name="title" content="Ponto Nobre Eventos — Catering de Churrasco Premium">
-    <meta name="description" content="Catering de churrasco de excelência para casamentos, batizados, eventos corporativos e festas privadas. Carnes DOP e produtos nacionais selecionados.">
-    <meta name="keywords" content="ponto nobre, catering churrasco, churrasco eventos, carnes DOP, casamentos churrasco, eventos corporativos, catering Portugal">
+    <title>Catering de Churrasco para Casamentos e Eventos | Ponto Nobre</title>
+    <meta name="title" content="Catering de Churrasco para Casamentos e Eventos | Ponto Nobre">
+    <meta name="description" content="Catering de churrasco premium para casamentos, batizados, aniversários e eventos corporativos. Carnes DOP e produto nacional selecionado. Orçamento em 24-48h.">
     <meta name="author" content="Ponto Nobre Eventos">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Portuguese">
@@ -16,43 +15,123 @@
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pontonobreeventos.pt/">
-    <meta property="og:title" content="Ponto Nobre Eventos — Catering de Churrasco Premium">
-    <meta property="og:description" content="Criamos momentos que ficam para sempre. Carnes DOP, produtos nacionais e serviço de excelência.">
+    <meta property="og:title" content="Catering de Churrasco Premium para Casamentos e Eventos">
+    <meta property="og:description" content="Criamos momentos que ficam para sempre. Carnes DOP, produto nacional e serviço de excelência em casamentos, batizados e eventos corporativos.">
     <meta property="og:image" content="https://pontonobreeventos.pt/logo.png">
+    <meta property="og:image:alt" content="Ponto Nobre Eventos — catering de churrasco premium">
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Ponto Nobre Eventos">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://pontonobreeventos.pt/">
-    <meta property="twitter:title" content="Ponto Nobre Eventos — Catering de Churrasco Premium">
-    <meta property="twitter:description" content="Criamos momentos que ficam para sempre. Carnes DOP, produtos nacionais e serviço de excelência.">
+    <meta property="twitter:title" content="Catering de Churrasco Premium para Casamentos e Eventos">
+    <meta property="twitter:description" content="Criamos momentos que ficam para sempre. Carnes DOP, produto nacional e serviço de excelência em casamentos, batizados e eventos corporativos.">
     <meta property="twitter:image" content="https://pontonobreeventos.pt/logo.png">
 
     <link rel="icon" type="image/png" href="logo.png">
-    <link rel="preload" as="image" href="images/hero-bg.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="images/hero-bg.webp" fetchpriority="high">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <!--
+      Dados estruturados (JSON-LD).
+      EM FALTA para SEO local — adicionar assim que existirem:
+        "telephone": "+351 9XX XXX XXX"
+        address.addressLocality / addressRegion / postalCode
+        "geo": { "@type": "GeoCoordinates", "latitude": ..., "longitude": ... }
+      Sem estes campos o negócio não é elegível para o mapa do Google.
+    -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "FoodEstablishment",
+      "@type": "CateringService",
+      "@id": "https://pontonobreeventos.pt/#negocio",
       "name": "Ponto Nobre Eventos",
+      "alternateName": "Ponto Nobre",
       "image": "https://pontonobreeventos.pt/logo.png",
-      "description": "Catering de churrasco premium para eventos. Carnes DOP e produtos nacionais selecionados.",
+      "logo": "https://pontonobreeventos.pt/logo.png",
+      "description": "Catering de churrasco premium para casamentos, batizados, aniversários, eventos corporativos e festas privadas. Carnes DOP e produtos nacionais selecionados.",
       "url": "https://pontonobreeventos.pt",
-      "servesCuisine": "Portuguese",
-      "priceRange": "$$$",
       "email": "geral@pontonobreeventos.pt",
+      "servesCuisine": ["Churrasco", "Portuguesa"],
+      "priceRange": "$$$",
+      "currenciesAccepted": "EUR",
       "sameAs": ["https://www.instagram.com/pontonobre.eventos/"],
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "PT"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Portugal"
+      },
+      "knowsAbout": [
+        "Catering de churrasco",
+        "Carnes DOP",
+        "Raças autóctones portuguesas",
+        "Catering para casamentos"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Serviços de catering de churrasco",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Churrasco para Casamentos",
+              "description": "Serviço de catering de churrasco para casamentos, com menu personalizado e equipa dedicada ao evento."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Churrasco para Batizados",
+              "description": "Catering de churrasco para batizados e celebrações familiares, adaptado ao número de convidados."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Churrasco para Aniversários",
+              "description": "Serviço de churrasco ao vivo para festas de aniversário, com carnes DOP e produto nacional."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Catering para Eventos Corporativos",
+              "description": "Soluções de catering de churrasco à medida para empresas, ações institucionais e team building."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Churrasco para Festas Privadas",
+              "description": "Experiências gastronómicas exclusivas de churrasco premium em eventos privados."
+            }
+          }
+        ]
+      },
+      "potentialAction": {
+        "@type": "RequestQuoteAction",
+        "name": "Pedir orçamento",
+        "target": "https://pontonobreeventos.pt/#orcamento"
       }
     }
     </script>
+
+    <!--
+      NOTA: um bloco FAQPage traria valor adicional, mas o Google exige que as
+      perguntas e respostas estejam visíveis na página. Só deve ser adicionado
+      em conjunto com uma secção de perguntas frequentes no site.
+    -->
 
     <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -95,9 +174,11 @@
         <div class="hero__bg" data-parallax="0.3"></div>
         <div class="hero__overlay"></div>
         <div class="hero__content container">
-            <span class="hero__label reveal">Churrasco de Excelência</span>
-            <h1 class="hero__title reveal reveal-delay-1">Criamos momentos que ficam para sempre.</h1>
-            <p class="hero__subtitle reveal reveal-delay-2">O sabor da nossa identidade está no produto nacional. O menu, esse, é construído à medida de cada evento.</p>
+            <h1 class="hero__title reveal">
+                <span class="hero__label">Catering de Churrasco Premium</span>
+                <span class="hero__title-text">Criamos momentos que ficam para sempre.</span>
+            </h1>
+            <p class="hero__subtitle reveal reveal-delay-2">Churrasco de excelência para casamentos, batizados e eventos corporativos. O menu é construído à medida de cada evento.</p>
             <a href="#orcamento" class="btn btn--white reveal reveal-delay-3">
                 Pedir Orçamento
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -113,11 +194,11 @@
         <div class="container">
             <div class="about__grid">
                 <div class="about__image reveal">
-                    <img src="images/about.png" alt="Gado autóctone português em pastagem natural" class="img--about" loading="lazy" decoding="async">
+                    <img src="images/about.webp" alt="Gado autóctone português em pastagem natural" class="img--about" loading="lazy" decoding="async">
                 </div>
                 <div class="about__content">
                     <span class="section__label reveal">Sobre Nós</span>
-                    <h2 class="section__title section__title--left reveal reveal-delay-1">A nossa visão</h2>
+                    <h2 class="section__title section__title--left reveal reveal-delay-1">A nossa visão de churrasco de excelência</h2>
                     <div class="about__copy">
                         <p class="about__text reveal reveal-delay-2">
                             Acreditamos que um grande evento começa com um produto de excelência.
@@ -209,7 +290,7 @@
             </div>
         </div>
         <div class="events__image reveal">
-            <img src="images/events.jpg" alt="Buffet de catering ao ar livre com mesas em madeira e decoração floral" class="img--events" loading="lazy" decoding="async">
+            <img src="images/events.webp" alt="Buffet de catering ao ar livre com mesas em madeira e decoração floral" class="img--events" loading="lazy" decoding="async">
         </div>
     </section>
 
@@ -253,54 +334,54 @@
         <div class="container">
             <div class="gallery__header reveal">
                 <span class="section__label">Galeria</span>
-                <h2 class="section__title">Os nossos eventos</h2>
+                <h2 class="section__title">Os nossos eventos de churrasco</h2>
             </div>
 
             <div class="events-masonry" id="events-gallery">
                 <button type="button" class="events-masonry__item reveal" data-gallery-index="0" aria-label="Ver fotografia 1">
-                    <img src="images/gallery/principal-01.jpg" alt="Tomahawk premium apresentado pela equipa Ponto Nobre" width="2800" height="3733" loading="eager" decoding="async">
+                    <img data-full="images/gallery/full/principal-01.webp" src="images/gallery/principal-01.webp" alt="Tomahawk premium apresentado pela equipa Ponto Nobre" width="700" height="934" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item reveal reveal-delay-1" data-gallery-index="1" aria-label="Ver fotografia 2">
-                    <img src="images/gallery/principal-02.jpg" alt="Churrasco ao vivo num evento especial" width="2296" height="3936" loading="eager" decoding="async">
+                    <img data-full="images/gallery/full/principal-02.webp" src="images/gallery/principal-02.webp" alt="Churrasco ao vivo num evento especial" width="700" height="1200" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item reveal reveal-delay-2" data-gallery-index="2" aria-label="Ver fotografia 3">
-                    <img src="images/gallery/principal-03.jpg" alt="Cortes de carne de excelência apresentados em tábua de madeira" width="2800" height="4976" loading="eager" decoding="async">
+                    <img data-full="images/gallery/full/principal-03.webp" src="images/gallery/principal-03.webp" alt="Cortes de carne de excelência apresentados em tábua de madeira" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item reveal" data-gallery-index="3" aria-label="Ver fotografia 4">
-                    <img src="images/gallery/principal-04.jpg" alt="Churrasco ao vivo com a equipa Ponto Nobre" width="2800" height="4976" loading="eager" decoding="async">
+                    <img data-full="images/gallery/full/principal-04.webp" src="images/gallery/principal-04.webp" alt="Churrasco ao vivo com a equipa Ponto Nobre" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal" data-gallery-index="4" aria-label="Ver fotografia 5">
-                    <img src="images/gallery/evento-01.jpg" alt="Churrasco Ponto Nobre num evento ao ar livre" width="2800" height="4976" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-01.webp" src="images/gallery/evento-01.webp" alt="Churrasco Ponto Nobre num evento ao ar livre" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal reveal-delay-1" data-gallery-index="5" aria-label="Ver fotografia 6">
-                    <img src="images/gallery/evento-02.jpg" alt="Equipa Ponto Nobre na preparação artesanal do churrasco" width="1290" height="2796" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-02.webp" src="images/gallery/evento-02.webp" alt="Equipa Ponto Nobre na preparação artesanal do churrasco" width="700" height="1518" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal reveal-delay-2" data-gallery-index="6" aria-label="Ver fotografia 7">
-                    <img src="images/gallery/evento-03.jpg" alt="Grelhador profissional com carnes num festival" width="2800" height="4976" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-03.webp" src="images/gallery/evento-03.webp" alt="Grelhador profissional com carnes num festival" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal" data-gallery-index="7" aria-label="Ver fotografia 8">
-                    <img src="images/gallery/evento-04.jpg" alt="Detalhe de churrasco ao vivo num evento" width="2800" height="4976" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-04.webp" src="images/gallery/evento-04.webp" alt="Detalhe de churrasco ao vivo num evento" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal reveal-delay-1" data-gallery-index="8" aria-label="Ver fotografia 9">
-                    <img src="images/gallery/evento-05.jpg" alt="Equipa em ação num evento de catering" width="2296" height="3992" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-05.webp" src="images/gallery/evento-05.webp" alt="Equipa em ação num evento de catering" width="700" height="1218" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal reveal-delay-2" data-gallery-index="9" aria-label="Ver fotografia 10">
-                    <img src="images/gallery/evento-06.jpg" alt="Tabuleiro com entrecosto premium preparado para grelhar" width="2800" height="4976" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-06.webp" src="images/gallery/evento-06.webp" alt="Tabuleiro com entrecosto premium preparado para grelhar" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal" data-gallery-index="10" aria-label="Ver fotografia 11">
-                    <img src="images/gallery/evento-07.jpg" alt="Ambiente de evento com serviço Ponto Nobre" width="2800" height="4976" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-07.webp" src="images/gallery/evento-07.webp" alt="Ambiente de evento com serviço Ponto Nobre" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal reveal-delay-1" data-gallery-index="11" aria-label="Ver fotografia 12">
-                    <img src="images/gallery/evento-08.jpg" alt="Equipa Ponto Nobre num evento corporativo" width="2800" height="4978" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-08.webp" src="images/gallery/evento-08.webp" alt="Equipa Ponto Nobre num evento corporativo" width="700" height="1245" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal reveal-delay-2" data-gallery-index="12" aria-label="Ver fotografia 13">
-                    <img src="images/gallery/evento-09.jpg" alt="Churrasco premium servido num evento especial" width="2800" height="4980" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-09.webp" src="images/gallery/evento-09.webp" alt="Churrasco premium servido num evento especial" width="700" height="1245" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal" data-gallery-index="13" aria-label="Ver fotografia 14">
-                    <img src="images/gallery/evento-10.jpg" alt="Preparação de carnes num evento Ponto Nobre" width="2800" height="4976" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-10.webp" src="images/gallery/evento-10.webp" alt="Preparação de carnes num evento Ponto Nobre" width="700" height="1244" loading="lazy" decoding="async">
                 </button>
                 <button type="button" class="events-masonry__item events-masonry__item--hidden reveal reveal-delay-1" data-gallery-index="14" aria-label="Ver fotografia 15">
-                    <img src="images/gallery/evento-11.jpg" alt="Equipa Ponto Nobre a grelhar num evento ao ar livre em praça histórica" width="1600" height="1200" loading="lazy" decoding="async">
+                    <img data-full="images/gallery/full/evento-11.webp" src="images/gallery/evento-11.webp" alt="Equipa Ponto Nobre a grelhar num evento ao ar livre em praça histórica" width="700" height="525" loading="lazy" decoding="async">
                 </button>
             </div>
 
@@ -318,7 +399,7 @@
             <div class="quote__grid">
                 <div class="quote__intro reveal">
                     <span class="section__label">Orçamento</span>
-                    <h2 class="section__title reveal reveal-delay-1">Peça o seu orçamento</h2>
+                    <h2 class="section__title reveal reveal-delay-1">Peça o seu orçamento de catering</h2>
                     <p class="quote__text reveal reveal-delay-2">
                         Conte-nos sobre o seu evento e receberá uma proposta personalizada.
                         Sem compromisso, com resposta em 24 a 48 horas.
