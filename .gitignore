@@ -13,6 +13,7 @@ Desktop.ini
 # Secrets
 .env
 .env.*
+api/config.php
 
 # Local conversion binaries (not part of the site)
 tools/ffmpeg/

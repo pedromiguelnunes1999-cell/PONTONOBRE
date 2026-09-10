@@ -20,8 +20,11 @@
 
     const CONFIG = Object.freeze({
         formEmail: 'geral@pontonobreeventos.pt',
-        // Web3Forms (recomendado): criar chave gratuita em https://web3forms.com
-        // com o email geral@pontonobreeventos.pt e colar aqui.
+        // API própria (SMTP Domínios.pt) — prioridade máxima quando existir no servidor.
+        smtpApiUrl: '/api/send-orcamento.php',
+        // Endpoint Google Apps Script. Ver tools/google-apps-script-orcamento.gs
+        googleScriptUrl: '',
+        // Fallback Web3Forms (pode ser filtrado pelo antispam mailbox.pt)
         web3formsAccessKey: '5c7e6917-d8d6-41ff-9605-f2b5f06eede9',
         loaderMinDuration: 700,
         loaderFallback: 4000,
@@ -1011,23 +1014,55 @@
         return Boolean(CONFIG.web3formsAccessKey && CONFIG.web3formsAccessKey.trim());
     }
 
-    async function submitViaWeb3Forms(payload) {
+    function hasGoogleScript() {
+        return Boolean(CONFIG.googleScriptUrl && CONFIG.googleScriptUrl.trim());
+    }
+
+    function cleanPayloadObject(payload) {
         const body = {
-            access_key: CONFIG.web3formsAccessKey.trim(),
             subject: 'Novo pedido de orçamento - Ponto Nobre Eventos',
-            from_name: 'Ponto Nobre Eventos',
-            replyto: payload.get('email')?.toString() || CONFIG.formEmail,
-            botcheck: false,
             ...payloadToObject(payload)
         };
 
-        // Evitar campos reservados do FormSubmit no Web3Forms.
         delete body._subject;
         delete body._captcha;
         delete body._template;
         delete body._replyto;
         delete body._honey;
         delete body._gotcha;
+        delete body.botcheck;
+        delete body.access_key;
+
+        return body;
+    }
+
+    async function submitViaSmtpApi(payload) {
+        const response = await fetch(CONFIG.smtpApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(cleanPayloadObject(payload))
+        });
+
+        return { response, data: await response.json().catch(() => ({})) };
+    }
+
+    async function submitViaGoogleScript(payload) {
+        const response = await fetch(CONFIG.googleScriptUrl.trim(), {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(cleanPayloadObject(payload))
+        });
+
+        return { response, data: await response.json().catch(() => ({})) };
+    }
+
+    async function submitViaWeb3Forms(payload) {
+        const body = {
+            access_key: CONFIG.web3formsAccessKey.trim(),
+            from_name: 'Website Ponto Nobre Eventos',
+            replyto: payload.get('email')?.toString() || CONFIG.formEmail,
+            ...cleanPayloadObject(payload)
+        };
 
         const response = await fetch('https://api.web3forms.com/submit', {
             method: 'POST',
@@ -1059,8 +1094,43 @@
         return { response, data: await response.json().catch(() => ({})) };
     }
 
+    async function trySubmit(runner) {
+        try {
+            const result = await runner();
+            if (isSuccessful(result.response, result.data)) {
+                return result;
+            }
+            return { ...result, ok: false };
+        } catch (error) {
+            return { response: { ok: false }, data: { message: String(error) }, ok: false, error };
+        }
+    }
+
     function isSuccessful(response, data) {
-        return response.ok && (data.success === true || data.success === 'true');
+        return Boolean(response?.ok) && (data.success === true || data.success === 'true');
+    }
+
+    async function dispatchSubmission(payload) {
+        // 1) SMTP próprio (Domínios.pt) — entrega fiável no email empresarial
+        // 2) Google Apps Script
+        // 3) Web3Forms / FormSubmit (muitas vezes filtrados pelo antispam mailbox.pt)
+        const smtpResult = await trySubmit(() => submitViaSmtpApi(payload));
+        if (isSuccessful(smtpResult.response, smtpResult.data)) {
+            return smtpResult;
+        }
+
+        if (hasGoogleScript()) {
+            const googleResult = await trySubmit(() => submitViaGoogleScript(payload));
+            if (isSuccessful(googleResult.response, googleResult.data)) {
+                return googleResult;
+            }
+        }
+
+        if (hasWeb3FormsKey()) {
+            return submitViaWeb3Forms(payload);
+        }
+
+        return submitViaFormSubmit(payload);
     }
 
     function translateProviderMessage(message = '') {
@@ -1154,9 +1224,7 @@
 
         try {
             const payload = buildPayload();
-            const { response, data } = hasWeb3FormsKey()
-                ? await submitViaWeb3Forms(payload)
-                : await submitViaFormSubmit(payload);
+            const { response, data } = await dispatchSubmission(payload);
 
             if (!isSuccessful(response, data)) {
                 showToast(translateProviderMessage(data.message || data.error), 'error');

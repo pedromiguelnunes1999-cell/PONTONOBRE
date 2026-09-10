@@ -1,0 +1,15 @@
+# DirectoryIndex disabled
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+</IfModule>
+
+# Bloquear acesso directo ao config
+<Files "config.php">
+    Require all denied
+</Files>
+<Files "config.sample.php">
+    Require all denied
+</Files>
+<Files "server.mjs">
+    Require all denied
+</Files>
