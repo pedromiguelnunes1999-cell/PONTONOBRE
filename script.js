@@ -20,8 +20,9 @@
 
     const CONFIG = Object.freeze({
         formEmail: 'geral@pontonobreeventos.pt',
-        // Alternativa mais fiável ao FormSubmit: chave gratuita em https://web3forms.com
-        web3formsAccessKey: '',
+        // Web3Forms (recomendado): criar chave gratuita em https://web3forms.com
+        // com o email geral@pontonobreeventos.pt e colar aqui.
+        web3formsAccessKey: '5c7e6917-d8d6-41ff-9605-f2b5f06eede9',
         loaderMinDuration: 700,
         loaderFallback: 4000,
         toastDuration: 6000,
@@ -927,27 +928,31 @@
 
     /* ----- Construção do payload ----- */
 
+    function readField(formData, key) {
+        return formData.get(key)?.toString().trim() || '';
+    }
+
     function buildPayload() {
         const formData = new FormData(quoteForm);
         const payload = new FormData();
 
         formData.forEach((value, key) => {
-            if (!key.startsWith('_')) {
+            if (!key.startsWith('_') && key !== 'botcheck') {
                 payload.append(key, value);
             }
         });
 
         if (formData.get('tipo-evento') === 'outro') {
-            const custom = formData.get('tipo-evento-outro')?.toString().trim();
+            const custom = readField(formData, 'tipo-evento-outro');
             payload.set('tipo-evento', custom ? `Outro: ${custom}` : 'Outro');
             payload.delete('tipo-evento-outro');
         }
 
         if (formData.get('convidados') === 'mais-100') {
-            const total = formData.get('convidados-mais')?.toString().trim();
+            const total = readField(formData, 'convidados-mais');
             payload.set('convidados', total ? `${total} pessoas` : '>100 pessoas');
         } else {
-            const total = formData.get('convidados')?.toString();
+            const total = readField(formData, 'convidados');
             if (total) {
                 payload.set('convidados', `${total} pessoas`);
             }
@@ -955,14 +960,45 @@
 
         payload.delete('convidados-mais');
 
-        payload.append('_subject', 'Novo pedido de orcamento - Ponto Nobre Eventos');
-        payload.append('_captcha', 'false');
-        payload.append('_template', 'table');
+        const nome = readField(formData, 'nome');
+        const email = readField(formData, 'email');
+        const telefone = readField(formData, 'telefone');
+        const tipoEvento = payload.get('tipo-evento')?.toString() || '';
+        const dataEvento = readField(formData, 'data');
+        const convidados = payload.get('convidados')?.toString() || '';
+        const cidade = readField(formData, 'cidade');
+        const regiao = readField(formData, 'regiao');
+        const espaco = readField(formData, 'espaco');
+        const metodo = readField(formData, 'metodo-contacto');
+        const criancas = readField(formData, 'criancas');
+        const criancasQtd = readField(formData, 'criancas-quantidade');
+        const restricoes = readField(formData, 'restricoes');
+        const comoConheceu = readField(formData, 'como-conheceu');
+        const observacoes = readField(formData, 'observacoes');
 
-        const replyTo = formData.get('email')?.toString().trim();
-        if (replyTo) {
-            payload.append('_replyto', replyTo);
-        }
+        // Campos canónicos que os providers de email esperam (name/email/message).
+        payload.set('name', nome);
+        payload.set('email', email);
+        payload.set(
+            'message',
+            [
+                'Novo pedido de orçamento — Ponto Nobre Eventos',
+                '',
+                `Nome: ${nome}`,
+                `E-mail: ${email}`,
+                `Telefone: ${telefone}`,
+                `Contacto preferencial: ${metodo || '—'}`,
+                `Tipo de evento: ${tipoEvento || '—'}`,
+                `Data prevista: ${dataEvento || '—'}`,
+                `Convidados: ${convidados || '—'}`,
+                `Local: ${[cidade, regiao].filter(Boolean).join(', ') || '—'}`,
+                `Espaço: ${espaco || '—'}`,
+                `Crianças: ${criancasQtd || criancas || '—'}`,
+                `Restrições alimentares: ${restricoes || '—'}`,
+                `Como nos conheceu: ${comoConheceu || '—'}`,
+                `Observações: ${observacoes || '—'}`
+            ].join('\n')
+        );
 
         return payload;
     }
@@ -971,22 +1007,49 @@
         return Object.fromEntries(payload.entries());
     }
 
+    function hasWeb3FormsKey() {
+        return Boolean(CONFIG.web3formsAccessKey && CONFIG.web3formsAccessKey.trim());
+    }
+
     async function submitViaWeb3Forms(payload) {
+        const body = {
+            access_key: CONFIG.web3formsAccessKey.trim(),
+            subject: 'Novo pedido de orçamento - Ponto Nobre Eventos',
+            from_name: 'Ponto Nobre Eventos',
+            replyto: payload.get('email')?.toString() || CONFIG.formEmail,
+            botcheck: false,
+            ...payloadToObject(payload)
+        };
+
+        // Evitar campos reservados do FormSubmit no Web3Forms.
+        delete body._subject;
+        delete body._captcha;
+        delete body._template;
+        delete body._replyto;
+        delete body._honey;
+        delete body._gotcha;
+
         const response = await fetch('https://api.web3forms.com/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({
-                access_key: CONFIG.web3formsAccessKey,
-                subject: 'Novo pedido de orcamento - Ponto Nobre Eventos',
-                from_name: payload.get('nome')?.toString() || 'Cliente',
-                ...payloadToObject(payload)
-            })
+            body: JSON.stringify(body)
         });
 
         return { response, data: await response.json().catch(() => ({})) };
     }
 
     async function submitViaFormSubmit(payload) {
+        payload.append('_subject', 'Novo pedido de orçamento - Ponto Nobre Eventos');
+        payload.append('_captcha', 'false');
+        payload.append('_template', 'table');
+        payload.append('_honey', '');
+        payload.append('form-name', 'pedido-orcamento');
+
+        const replyTo = payload.get('email')?.toString().trim();
+        if (replyTo) {
+            payload.append('_replyto', replyTo);
+        }
+
         const response = await fetch(`https://formsubmit.co/ajax/${CONFIG.formEmail}`, {
             method: 'POST',
             headers: { Accept: 'application/json' },
@@ -1002,8 +1065,12 @@
 
     function translateProviderMessage(message = '') {
         if (/activation/i.test(message)) {
-            return 'O formulário ainda não está ativado. Foi enviado um e-mail de confirmação para '
-                 + `${CONFIG.formEmail} — basta clicar no link «Activate Form» e o envio passa a funcionar.`;
+            return 'O formulário ainda não está ativado. Verifique o e-mail (e o spam) de '
+                 + `${CONFIG.formEmail} e clique em «Activate Form».`;
+        }
+
+        if (/access.?key|unauthorized|invalid/i.test(message)) {
+            return 'A chave de envio do formulário é inválida. Contacte o suporte do site.';
         }
 
         return message || 'Não foi possível enviar o pedido. Tente novamente dentro de instantes.';
@@ -1087,12 +1154,12 @@
 
         try {
             const payload = buildPayload();
-            const { response, data } = CONFIG.web3formsAccessKey
+            const { response, data } = hasWeb3FormsKey()
                 ? await submitViaWeb3Forms(payload)
                 : await submitViaFormSubmit(payload);
 
             if (!isSuccessful(response, data)) {
-                showToast(translateProviderMessage(data.message), 'error');
+                showToast(translateProviderMessage(data.message || data.error), 'error');
                 return;
             }
 
