@@ -499,19 +499,8 @@
                         </div>
                         <div class="form__group">
                             <label for="convidados" class="form__label">N.º de convidados</label>
-                            <select id="convidados" name="convidados" class="form__input form__select" required>
-                                <option value="" disabled selected>Selecione...</option>
-                                <option value="30">30 pessoas</option>
-                                <option value="50">50 pessoas</option>
-                                <option value="70">70 pessoas</option>
-                                <option value="100">100 pessoas</option>
-                                <option value="mais-100">&gt;100 pessoas</option>
-                            </select>
-                        </div>
-
-                        <div class="form__group form__conditional" id="convidados-mais-group">
-                            <label for="convidados-mais" class="form__label">Indique a quantidade</label>
-                            <input type="number" id="convidados-mais" name="convidados-mais" class="form__input" min="101" placeholder="Ex: 150">
+                            <input type="number" id="convidados" name="convidados" class="form__input" required min="1" step="1" inputmode="numeric" placeholder="Ex: 45">
+                            <p class="form__hint">Para um número inferior a 30 convidados aplica-se uma taxa de serviço de 250&nbsp;€.</p>
                         </div>
 
                         <fieldset class="form__fieldset form__group--full">

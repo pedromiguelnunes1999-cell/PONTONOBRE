@@ -568,14 +568,12 @@
         },
         convidados: {
             label: 'N.º de convidados',
-            validate: value => (value ? '' : 'Selecione o número aproximado de convidados.')
-        },
-        'convidados-mais': {
-            label: 'Número de convidados',
             validate: value => {
                 if (!value) return 'Indique o número de convidados.';
                 const total = Number(value);
-                if (!Number.isFinite(total) || total < 101) return 'Indique um número superior a 100.';
+                if (!Number.isFinite(total) || !Number.isInteger(total) || total < 1) {
+                    return 'Indique um número inteiro igual ou superior a 1.';
+                }
                 if (total > 2000) return 'Para mais de 2000 convidados, contacte-nos diretamente.';
                 return '';
             }
@@ -810,9 +808,6 @@
     const tipoEvento = $('#tipo-evento');
     const tipoEventoOutroGroup = $('#tipo-evento-outro-group');
     const tipoEventoOutro = $('#tipo-evento-outro');
-    const convidados = $('#convidados');
-    const convidadosMaisGroup = $('#convidados-mais-group');
-    const convidadosMais = $('#convidados-mais');
     const criancasRadios = getControls('criancas');
     const criancasGroup = $('#criancas-quantidade-group');
     const criancasQuantidade = $('#criancas-quantidade');
@@ -836,13 +831,6 @@
         const isOutro = tipoEvento?.value === 'outro';
         toggleConditional(tipoEventoOutroGroup, tipoEventoOutro, isOutro, 'tipo-evento-outro');
         tipoEvento?.closest('.form__group')?.classList.toggle('form__group--full', !isOutro);
-
-        toggleConditional(
-            convidadosMaisGroup,
-            convidadosMais,
-            convidados?.value === 'mais-100',
-            'convidados-mais'
-        );
 
         toggleConditional(
             criancasGroup,
@@ -951,17 +939,13 @@
             payload.delete('tipo-evento-outro');
         }
 
-        if (formData.get('convidados') === 'mais-100') {
-            const total = readField(formData, 'convidados-mais');
-            payload.set('convidados', total ? `${total} pessoas` : '>100 pessoas');
-        } else {
-            const total = readField(formData, 'convidados');
-            if (total) {
-                payload.set('convidados', `${total} pessoas`);
-            }
+        const totalConvidados = Number(readField(formData, 'convidados'));
+        if (Number.isFinite(totalConvidados) && totalConvidados > 0) {
+            const taxaNota = totalConvidados < 30
+                ? ' (aplica-se taxa de serviço de 250€)'
+                : '';
+            payload.set('convidados', `${totalConvidados} pessoas${taxaNota}`);
         }
-
-        payload.delete('convidados-mais');
 
         const nome = readField(formData, 'nome');
         const email = readField(formData, 'email');
